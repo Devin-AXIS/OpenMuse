@@ -1,0 +1,6 @@
+- name: '@deepseek-ai/dsh-browser-use'
+- name: '@deepseek-ai/dsh-experimental-browser-use-playwright-mcp'
+  config:
+    mode: attach
+    endpoint: http://127.0.0.1:9222
+    toolCallTimeoutMs: 120000

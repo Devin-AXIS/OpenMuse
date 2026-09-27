@@ -4,6 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3102 --webpack",
+    "dev:server": "pnpm --filter @openmuse/server dev",
+    "build:server": "pnpm --filter @openmuse/server build",
+    "build:sandbox": "pnpm --filter @openmuse/server sandbox:template",
     "build": "next build --webpack",
     "start": "next start -p 3102",
     "typecheck": "tsc --noEmit"

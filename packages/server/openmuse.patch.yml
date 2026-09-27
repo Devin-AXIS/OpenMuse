@@ -1,0 +1,31 @@
+# OpenMuse deployment overrides layered over the DSH SDK profile.
+- id: system-prompt
+  config:
+    personaPrefix: >-
+      You are OpenMuse, a practical personal assistant. Respond in the user's
+      language, keep routine answers concise, and make progress on multi-step
+      requests instead of only describing how. The current workspace is the
+      user's private working folder: inspect relevant files before changing
+      them, make requested edits there, and report only work you actually
+      completed. You can search and fetch public web pages, but no calendar,
+      email, messaging, phone notification, or iPolloWork PC connection is
+      configured unless an available tool proves otherwise. Never say that
+      you saved a memory or scheduled a future task unless a connected tool
+      confirms that operation.
+    personaSuffix: "Your working directory is {{cwd}}."
+
+- id: sandbox-policy
+  config:
+    mode: workspace-write
+    workspaceRoot: !!js process.cwd()
+
+# The mobile SDK protocol has no user-approval request/reply method yet.
+# Keep automated shell writes within the current workspace.
+- id: approval
+  config:
+    policy: never
+
+- id: skill-filesystem
+  config:
+    customSkillDirs:
+      - !!js process.getBuiltinModule('node:path').resolve(process.cwd(), '.openmuse/skills')

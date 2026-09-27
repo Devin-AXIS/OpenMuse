@@ -1,7 +1,7 @@
 "use client";
 
 import { Activity, ArrowRight, Check, Cloud, Laptop, Lightbulb, Menu, Plus, ScanLine, Sparkles, Target, X } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { AppBackground } from "@/components/future-lens/ds/app-background";
@@ -20,6 +20,7 @@ const HEADER_WRAPPER_CLASS = "relative z-50 flex flex-col shrink-0 rounded-t-3xl
 
 export function ChatSessionView({ sessionId }: { sessionId: string }) {
   const router = useRouter();
+  const pathname = usePathname();
   const { language } = useAppConfig();
   const t = translations[language];
   const [runtime, setRuntime] = useState<Runtime>("cloud-dsh");
@@ -50,6 +51,12 @@ export function ChatSessionView({ sessionId }: { sessionId: string }) {
 
   useEffect(() => { scheduleLatestMessage(); }, [chat.messages, chat.todos, chat.activity, chat.activeAssistantMessageId, busy, scheduleLatestMessage]);
   useEffect(() => () => { if (scrollFrameRef.current != null) cancelAnimationFrame(scrollFrameRef.current); }, []);
+  useEffect(() => {
+    if (chat.state === "signed-out") router.replace(`/auth?next=${encodeURIComponent(pathname || "/")}`);
+  }, [chat.state, pathname, router]);
+  useEffect(() => {
+    if (sessionId === "new" && chat.session?.id) router.replace(`/chat/${encodeURIComponent(chat.session.id)}`);
+  }, [chat.session?.id, router, sessionId]);
 
   function chooseRuntime(next: Runtime) {
     setRuntimeOpen(false);
