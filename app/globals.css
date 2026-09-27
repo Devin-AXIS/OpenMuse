@@ -1,0 +1,580 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+html[data-capacitor-native="true"][data-capacitor-platform="ios"][data-ios-major-version="27"] .bottom-fade-overlay {
+  background-image: linear-gradient(
+    to top,
+    var(--background) 0%,
+    color-mix(in srgb, var(--background) 90%, transparent) 55%,
+    color-mix(in srgb, var(--background) 0%, transparent) 100%
+  );
+}
+
+:root {
+  /* 与 @theme 一致，不依赖构建期拉取 Google Fonts */
+  --font-geist-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --app-font-scale: 1;
+  --text-xs: calc(0.75rem * var(--app-font-scale));
+  --text-sm: calc(0.875rem * var(--app-font-scale));
+  --text-base: calc(1rem * var(--app-font-scale));
+  --text-4xl: calc(2.25rem * var(--app-font-scale));
+
+  /* Base System Colors - Mapped to Future Lens Light Theme */
+  --background: #f8f9fb;
+  /* Was hardcoded #F8F9FB */
+  --foreground: #0f172a;
+  /* Slate 900 */
+
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+
+  --primary: #0f172a;
+  /* Slate 900 */
+  --primary-foreground: #ffffff;
+
+  --secondary: #f1f5f9;
+  /* Slate 100 */
+  --secondary-foreground: #0f172a;
+
+  --muted: #f1f5f9;
+  /* Slate 100 - Used for bubbles/backgrounds */
+  --muted-foreground: #64748b;
+  /* Slate 500 - Used for secondary text */
+
+  --accent: #f1f5f9;
+  /* Slate 100 */
+  --accent-foreground: #0f172a;
+
+  --destructive: #ef4444;
+  /* Rose 500 approx */
+  --destructive-foreground: #ffffff;
+
+  --border: #e2e8f0;
+  /* Slate 200 */
+  --input: #e2e8f0;
+  --ring: #0f172a;
+
+  /* Custom Semantic Status Colors for Future Lens */
+  --success: #10b981;
+  /* Emerald 500 */
+  --success-foreground: #ffffff;
+
+  --warning: #f59e0b;
+  /* Amber 500 */
+  --warning-foreground: #ffffff;
+
+  --info: #3b82f6;
+  /* Blue 500 */
+  --info-foreground: #ffffff;
+
+  /* Adding trending hot topic colors for consistency */
+  --hot-1: #fe2c55;
+  /* Top 1 Hot Red */
+  --hot-2: #ff6600;
+  /* Top 2 Orange */
+  --hot-3: #ff9900;
+  /* Top 3 Amber */
+
+  /* Adding semantic background glow colors */
+  --app-bg: 248 249 251;
+  /* #F8F9FB as HSL for light mode */
+  --glow-blue: 170 203 236;
+  /* Light blue glow */
+  --glow-purple: 190 213 239;
+  /* Light purple-blue glow */
+  --glow-accent: 210 225 240;
+  /* Accent glow */
+  --glow-warm: 246 218 199;
+  /* Warm cream glow - 底部淡暖色，平衡整体冷调 */
+
+  /* Radius System */
+  /* 0.75rem = 12px. rounded-xl = radius + 4px = 16px (Matches design) */
+  --radius: 0.75rem;
+
+  /* 默认动效（Web） */
+  --animate-duration: 0.35s;
+  --animate-ease: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+  --sidebar: #f8fafc;
+  --sidebar-foreground: #0f172a;
+  --sidebar-primary: #0f172a;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f1f5f9;
+  --sidebar-accent-foreground: #0f172a;
+  --sidebar-border: #e2e8f0;
+  --sidebar-ring: #0f172a;
+}
+
+/* Tailwind 任意 px 字号不会继承根字号；统一接入个性化文字档位，默认视觉保持不变。 */
+@layer utilities {
+  .text-\[9px\] { font-size: calc(9px * var(--app-font-scale)) !important; }
+  .text-\[10px\] { font-size: calc(10px * var(--app-font-scale)) !important; }
+  .text-\[11px\] { font-size: calc(11px * var(--app-font-scale)) !important; }
+  .text-\[12px\] { font-size: calc(12px * var(--app-font-scale)) !important; }
+  .text-\[13px\] { font-size: calc(13px * var(--app-font-scale)) !important; }
+  .text-\[14px\] { font-size: calc(14px * var(--app-font-scale)) !important; }
+  .text-\[14\.5px\] { font-size: calc(14.5px * var(--app-font-scale)) !important; }
+  .text-\[15px\] { font-size: calc(15px * var(--app-font-scale)) !important; }
+  .text-\[18px\] { font-size: calc(18px * var(--app-font-scale)) !important; }
+  .text-\[20px\] { font-size: calc(20px * var(--app-font-scale)) !important; }
+  .text-\[22px\] { font-size: calc(22px * var(--app-font-scale)) !important; }
+  .text-\[28px\] { font-size: calc(28px * var(--app-font-scale)) !important; }
+}
+
+/* Capacitor 原生 App：更接近 iOS/Android 的动效时长与缓动 */
+[data-capacitor-native] {
+  --animate-duration: 0.28s;
+  --animate-ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.dark {
+  /* Future Lens Dark Theme Mappings */
+  --background: #0f172a;
+  /* Slate 900 */
+  --foreground: #f8fafc;
+  /* Slate 50 */
+
+  --card: #1e293b;
+  /* Slate 800 */
+  --card-foreground: #f8fafc;
+
+  --popover: #1e293b;
+  --popover-foreground: #f8fafc;
+
+  --primary: #f8fafc;
+  /* Slate 50 */
+  --primary-foreground: #0f172a;
+
+  --secondary: #1e293b;
+  /* Slate 800 */
+  --secondary-foreground: #f8fafc;
+
+  --muted: #1e293b;
+  /* Slate 800 */
+  --muted-foreground: #94a3b8;
+  /* Slate 400 */
+
+  --accent: #1e293b;
+  --accent-foreground: #f8fafc;
+
+  --destructive: #7f1d1d;
+  --destructive-foreground: #f8fafc;
+
+  --border: #1e293b;
+  --input: #1e293b;
+  --ring: #94a3b8;
+
+  --success: #059669;
+  /* Emerald 600 */
+  --success-foreground: #f8fafc;
+
+  --warning: #d97706;
+  /* Amber 600 */
+  --warning-foreground: #f8fafc;
+
+  --info: #2563eb;
+  /* Blue 600 */
+  --info-foreground: #f8fafc;
+
+  /* Adding hot colors for dark mode */
+  --hot-1: #fe2c55;
+  --hot-2: #ff6600;
+  --hot-3: #ff9900;
+
+  /* Dark mode background and glow colors - inspired by reference */
+  --app-bg: 15 23 42;
+  /* Deep blue-gray base (#0f172a) */
+  --glow-blue: 30 58 88;
+  /* Subtle deep blue glow */
+  --glow-purple: 45 55 75;
+  /* Subtle deep purple-blue glow */
+  --glow-accent: 38 50 70;
+  /* Subtle accent glow */
+  --glow-warm: 58 50 38;
+  /* Subtle warm glow - 暗色下的低调暖色 */
+
+  --sidebar: #0f172a;
+  --sidebar-foreground: #f8fafc;
+  --sidebar-primary: #4880ff;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #1e293b;
+  --sidebar-accent-foreground: #f8fafc;
+  --sidebar-border: #1e293b;
+  --sidebar-ring: #94a3b8;
+}
+
+@theme inline {
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas, monospace;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+
+  /* Adding hot color tokens */
+  --color-hot-1: var(--hot-1);
+  --color-hot-2: var(--hot-2);
+  --color-hot-3: var(--hot-3);
+
+  --color-app-bg: var(--app-bg);
+  --color-glow-blue: var(--glow-blue);
+  --color-glow-purple: var(--glow-purple);
+  --color-glow-accent: var(--glow-accent);
+  --color-glow-warm: var(--glow-warm);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  /* 统一玻璃阴影 token（shadow-glass / shadow-glass-* 工具类）
+     与 DesignTokens.shadow 对应，组件中请勿再手写等值的任意值阴影 */
+  --shadow-glass: 0 4px 24px -8px rgb(0 0 0 / 0.06), 0 2px 12px -4px rgb(0 0 0 / 0.04);
+  --shadow-glass-raised: 0 4px 24px -8px rgb(0 0 0 / 0.06), 0 2px 12px -4px rgb(0 0 0 / 0.04), inset 0 1px 0 0 rgb(255 255 255 / 0.5);
+  --shadow-glass-strong: 0 4px 20px -6px rgb(0 0 0 / 0.12), 0 2px 10px -4px rgb(0 0 0 / 0.08);
+  --shadow-glass-soft: 0 4px 24px -8px rgb(0 0 0 / 0.06);
+  /* GlassPanel 专用分级（low/subtle/high，medium 即 glass-raised） */
+  --shadow-glass-low: 0 2px 16px -4px rgb(0 0 0 / 0.05), 0 1px 6px -2px rgb(0 0 0 / 0.03), inset 0 1px 0 0 rgb(255 255 255 / 0.45);
+  --shadow-glass-subtle: 0 4px 24px -8px rgb(0 0 0 / 0.06), 0 2px 8px -4px rgb(0 0 0 / 0.04), inset 0 1px 0 0 rgb(255 255 255 / 0.45);
+  --shadow-glass-high: 0 8px 32px -12px rgb(0 0 0 / 0.08), 0 4px 16px -6px rgb(0 0 0 / 0.05), inset 0 1px 0 0 rgb(255 255 255 / 0.55);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+/* 思考占位符脉冲动画（. .. ... 循环感） */
+@keyframes thinking-pulse {
+
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+.animate-thinking-pulse {
+  animation: thinking-pulse 0.8s ease-in-out infinite;
+}
+
+/* 背景光晕「呼吸」动效：缓慢的明度 + 微缩放，增强毛玻璃悬浮与呼吸感。
+   仅用于 AppBackground 装饰层（pointer-events-none），prefers-reduced-motion 下由 Tailwind motion-reduce:animate-none 关闭。 */
+@keyframes glow-breathe {
+
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.12);
+  }
+}
+
+@layer utilities {
+
+  /* Liquid Orb Morph Animations - 参考代码：更圆润的有机形状 */
+  @keyframes morph {
+
+    0%,
+    100% {
+      /* 参考代码：使用更圆润的百分比值，创建有机的液态形状 */
+      border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+      transform: translate(0, 0) rotate(0deg);
+    }
+
+    50% {
+      /* 参考代码：中间状态使用不同的百分比值，让形状更动态 */
+      border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+      transform: translate(10px, -20px) rotate(180deg);
+    }
+  }
+
+  .animate-morph-slow {
+    animation: morph 10s ease-in-out infinite alternate;
+    will-change: transform, border-radius;
+  }
+
+  .animate-morph-medium {
+    animation: morph 8s ease-in-out infinite alternate;
+    will-change: transform, border-radius;
+  }
+
+  .animate-morph-fast {
+    animation: morph 6s ease-in-out infinite alternate;
+    will-change: transform, border-radius;
+  }
+
+  .animation-delay-2000 {
+    animation-delay: -2.5s;
+  }
+
+  .animation-delay-4000 {
+    animation-delay: -5s;
+  }
+
+  /* Text Shimmer Animation */
+  @keyframes textShimmer {
+    0% {
+      background-position: -200% center;
+    }
+
+    100% {
+      background-position: 200% center;
+    }
+  }
+
+  .animate-text-shimmer {
+    animation: textShimmer 3s linear infinite;
+    will-change: background-position;
+  }
+
+  .ease-spring {
+    transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  /* Processing 状态增强动画 - 更明显的翻滚效果 */
+  @keyframes processing-orb {
+    0% {
+      transform: scale(0.7) rotate(0deg) translateY(0);
+    }
+
+    25% {
+      transform: scale(0.65) rotate(90deg) translateY(-10px);
+    }
+
+    50% {
+      transform: scale(0.6) rotate(180deg) translateY(0);
+    }
+
+    75% {
+      transform: scale(0.65) rotate(270deg) translateY(10px);
+    }
+
+    100% {
+      transform: scale(0.7) rotate(360deg) translateY(0);
+    }
+  }
+
+  .animate-processing-orb {
+    animation: processing-orb 1.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    will-change: transform;
+    transform: translateZ(0);
+    /* GPU 加速 */
+  }
+
+  /* Idle 状态增强动画 - 轻微的呼吸效果 */
+  @keyframes idle-breathe {
+
+    0%,
+    100% {
+      transform: scale(1);
+    }
+
+    50% {
+      transform: scale(1.05);
+    }
+  }
+
+  .animate-idle-breathe {
+    animation: idle-breathe 3s ease-in-out infinite;
+    will-change: transform;
+    transform: translateZ(0);
+    /* GPU 加速 */
+  }
+
+  /* Audio Waveform 动画已迁移：组件 ai/audio-waveform.tsx 自带内联 keyframes，此处不再保留 */
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    /* Remove tap highlight color on mobile for native app feel */
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* 深色模式：仅对液态球做颜色正常化，弱化黄色，与浅色模式观感一致（不修改组件本身） */
+  .dark [data-liquid-orb] {
+    filter: hue-rotate(-18deg) saturate(0.92);
+  }
+
+  /* 确保 AI 特效组件完全没有边框 - 覆盖全局样式 */
+  /* 使用更具体的选择器，确保覆盖所有可能的边框样式 */
+  /* 优先级必须高于全局的 * { @apply border-border } */
+  [data-liquid-orb],
+  [data-liquid-orb] *,
+  [data-liquid-orb] *::before,
+  [data-liquid-orb] *::after,
+  [data-liquid-text],
+  [data-liquid-text] *,
+  [data-liquid-text] *::before,
+  [data-liquid-text] *::after {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    background-color: transparent !important;
+  }
+
+  /* Mobile text scaling protection - prevents browser auto-zoom on real devices */
+  html {
+    -webkit-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    /* Prevent horizontal scroll and rubber-banding */
+    overflow-x: hidden;
+    overscroll-behavior: none;
+    /* 使用 100vh 确保覆盖整个视口高度（iOS WebView 兼容性更好） */
+    height: 100vh !important;
+    min-height: 100vh !important;
+    max-height: 100vh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    /* 确保背景延伸到整个屏幕 */
+    background-color: rgb(var(--app-bg)) !important;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    /* Ensure body takes full height and prevents scroll */
+    overflow-x: hidden !important;
+    overflow-y: hidden !important;
+    overscroll-behavior: none !important;
+    /* 使用 100vh 确保覆盖整个视口高度（iOS WebView 兼容性更好） */
+    height: 100vh !important;
+    min-height: 100vh !important;
+    max-height: 100vh !important;
+    width: 100%;
+    margin: 0 !important;
+    padding: 0 !important;
+    /* 确保背景延伸到整个屏幕 */
+    background-color: rgb(var(--app-bg)) !important;
+    /* Removed position: fixed to restore natural document flow and prevent input instability */
+    /* Disable user selection by default for app-like feel */
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  /* Allow text selection only on specific readable content if needed */
+  .select-text {
+    user-select: text;
+    -webkit-user-select: text;
+  }
+
+  /* Prevent image dragging */
+  img {
+    -webkit-user-drag: none;
+    user-drag: none;
+  }
+
+  /* Hide scrollbars for cleaner native look */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Force 16px font size on mobile inputs to prevent iOS auto-zoom and horizontal shake */
+  @media screen and (max-width: 768px) {
+
+    input,
+    textarea,
+    select {
+      font-size: 16px !important;
+    }
+  }
+
+  /* 暗黑模式：登录页面背景 - 使用 .dark 类选择器 */
+  html.dark [data-liquid-ai-assistant] {
+    background: rgba(17, 24, 39, 0.95) !important;
+  }
+
+  /* 确保暗黑模式下背景正确显示 */
+  .dark [data-liquid-ai-assistant] {
+    background: rgba(17, 24, 39, 0.95) !important;
+  }
+
+  /* Markdown 内容包装器：优化嵌套卡片样式，减少视觉上的"卡片感" */
+  .markdown-content-wrapper {
+
+    /* 优化嵌套卡片：减少阴影、边框和间距，让内容更统一 */
+    & .relative.bg-white\/90,
+    & .relative.bg-white\/90\\.backdrop-blur-sm,
+    & .relative.bg-destructive\/5,
+    & .relative.bg-amber-50\/50 {
+      box-shadow: none !important;
+      border-left-width: 2px !important;
+      padding: 0.875rem !important;
+      margin-bottom: 0.5rem !important;
+      border-radius: 0.5rem !important;
+    }
+
+    & .relative.bg-white\/90:last-child,
+    & .relative.bg-destructive\/5:last-child,
+    & .relative.bg-amber-50\/50:last-child {
+      margin-bottom: 0 !important;
+    }
+
+    /* 优化 space-y-4 容器内的间距 */
+    & .space-y-4>div {
+      margin-bottom: 0.5rem !important;
+    }
+
+    & .space-y-4>div:last-child {
+      margin-bottom: 0 !important;
+    }
+
+    /* 移除嵌套卡片中的装饰性元素（如模糊背景圆） */
+    & .absolute.top-0.right-0.w-24.h-24 {
+      display: none !important;
+    }
+  }
+
+  /* iOS 键盘修复：通过组件层面的动态高度处理，不在这里强制设置 */
+}

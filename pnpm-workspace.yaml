@@ -1,0 +1,11 @@
+packages:
+  - "packages/*"
+
+allowBuilds:
+  "@tailwindcss/oxide": true
+  esbuild: true
+  sharp: true
+
+overrides:
+  motion-dom: 12.23.23
+  motion-utils: 12.23.6
